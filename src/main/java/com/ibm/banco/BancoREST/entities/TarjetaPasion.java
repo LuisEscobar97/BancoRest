@@ -8,7 +8,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "tarjetas_pasiones",schema = "tarjetas")
 public class TarjetaPasion implements Serializable {
@@ -31,7 +30,22 @@ public class TarjetaPasion implements Serializable {
     @JoinColumn(name = "tarjeta_id")
     private Tarjeta tarjeta;
 
+    public TarjetaPasion(Integer id, Integer limiteEdadMaximo, Integer limiteEdadMinimo, Integer limiteSalarioMaximo, Integer limiteSalarioMinimo) {
+        this.id = id;
+        this.limiteEdadMaximo = limiteEdadMaximo;
+        this.limiteEdadMinimo = limiteEdadMinimo;
+        this.limiteSalarioMaximo = limiteSalarioMaximo;
+        this.limiteSalarioMinimo = limiteSalarioMinimo;
+    }
 
-
-
+    @Override
+    public String toString() {
+        return "TarjetaPasion{" +
+                "id=" + id +
+                ", limiteEdadMaximo=" + limiteEdadMaximo +
+                ", limiteEdadMinimo=" + limiteEdadMinimo +
+                ", limiteSalarioMaximo=" + limiteSalarioMaximo +
+                ", limiteSalarioMinimo=" + limiteSalarioMinimo +
+                '}';
+    }
 }

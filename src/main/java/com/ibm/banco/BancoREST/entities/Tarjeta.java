@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+
 @Entity
 @Table(name = "tarjetas",schema = "tarjetas")
 public class Tarjeta implements Serializable {
@@ -37,5 +37,23 @@ public class Tarjeta implements Serializable {
         this.id = id;
         this.nombre = nombre;
         this.tipoTarjeta = tipoTarjeta;
+    }
+    @PrePersist
+    private void antesPersistir(){
+        this.fechaCreacion=new Date();
+    }
+
+    @PreUpdate
+    private void antesActualizar(){
+        this.fechaModificacion=new Date();
+    }
+
+    @Override
+    public String toString() {
+        return "Tarjeta{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", tipoTarjeta=" + tipoTarjeta +
+                '}';
     }
 }

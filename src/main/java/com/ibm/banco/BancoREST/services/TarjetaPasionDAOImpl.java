@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TarjetaPasionService {
-    @Autowired
-    TarjetaPasionRespository tarjetaPasionRespository;
+public class TarjetaPasionDAOImpl extends GenericDAOImpl<TarjetaPasion,TarjetaPasionRespository>implements  TarjetaPasionDAO {
 
-    public Optional<List<TarjetaPasion>> getTarjetaPorPasion(Integer edad, Integer salario, String pasion){
-        return tarjetaPasionRespository.getTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
+    public TarjetaPasionDAOImpl(TarjetaPasionRespository respository) {
+        super(respository);
     }
 
 }
