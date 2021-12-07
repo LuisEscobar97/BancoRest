@@ -17,4 +17,9 @@ public class TarjetaDAOImpl extends GenericDAOImpl<Tarjeta, TarjetaRepository> i
     public Iterable<Tarjeta> findTarjetasPorPasionEdadAndSalario(Integer edad, Integer salario, String pasion) {
         return repository.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
     }
+
+    @Override
+    public Iterable<Tarjeta> findTarjetasPorPasionEdadAndSalario2(Integer edad,String pasion) {
+        return repository.findTarjetasPorPasionEdadAndSalario2(edad,pasion);
+    }
 }

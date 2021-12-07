@@ -32,6 +32,7 @@ public class Comandos implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
        /* Pasion pasion1= new Pasion(null,"Nadar");
         Pasion pasion2= new Pasion(null,"Compras");
         Pasion pasion3= new Pasion(null,"Viajar");
@@ -53,7 +54,6 @@ public class Comandos implements CommandLineRunner {
         Cliente cliente7= new Cliente(null,"Cliente 8","Apellido 8","213110",new BigDecimal(17000),29);
         Cliente cliente8= new Cliente(null,"Cliente 9","Apellido 9","213111",new BigDecimal(16000),40);
 
-
         clienteDAO.guardar(cliente1);
         clienteDAO.guardar(cliente2);
         clienteDAO.guardar(cliente3);
@@ -62,6 +62,7 @@ public class Comandos implements CommandLineRunner {
         clienteDAO.guardar(cliente6);
         clienteDAO.guardar(cliente7);
         clienteDAO.guardar(cliente8);
+
         Tarjeta tarjeta1= new Tarjeta(null,"Tarjeta Gris BBVA", TipoTarjeta.PREMIUM);
         Tarjeta tarjeta2= new Tarjeta(null,"Tarjeta Gold BBVA", TipoTarjeta.GOLD);
         Tarjeta tarjeta3= new Tarjeta(null,"Tarjeta Premiere Banamex", TipoTarjeta.ESTANDAR);
@@ -93,12 +94,12 @@ public class Comandos implements CommandLineRunner {
         tarjetaPasionDAO.guardar(tarjetaPasion1);*)
          */
 
-        List<Tarjeta> tarejtas = (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(Integer.parseInt("24"),Integer.parseInt("8000"),"Nadar");
-        tarejtas.forEach(System.out::println);
+        List<Tarjeta> tarejtas = (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(30,10000,"Nadar");
+       tarejtas.forEach(System.out::println);
 
+       List<TarjetaPasion>pasiones= (List<TarjetaPasion>) tarjetaPasionDAO.buscarTodos();
 
-
-
+        pasiones.forEach(System.out::println);
 
     }
 }
