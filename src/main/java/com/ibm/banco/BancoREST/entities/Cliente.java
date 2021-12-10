@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,10 +23,23 @@ public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotNull(message = "No puede ser nulo")
+    @NotEmpty(message = "No puede estar vacio")
+    @Size(min = 5,max = 50,message = "la logitud va de 5 a 50 caracteres")
     private String nombre;
+    @NotNull(message = "No puede ser nulo")
+    @NotEmpty(message = "No puede estar vacio")
+    @Size(min = 5,max = 50,message = "la logitud va de 5 a 50 caracteres")
     private String apellido;
+    @NotNull(message = "No puede ser nulo")
+    @NotEmpty(message = "No puede estar vacio")
+    @Size(min = 5,max = 50,message = "la logitud va de 5 a 50 caracteres")
     private String dni;
+    @NotNull(message = "No puede ser nulo")
+    @Positive(message = "tiene que ser mayor a cero")
     private BigDecimal sueldo;
+    @NotNull(message = "No puede ser nulo")
+    @Positive(message = "tiene que ser mayor a cero")
     private Integer edad;
     @Column(name = "fecha_alta")
     private Date fechaAlta;

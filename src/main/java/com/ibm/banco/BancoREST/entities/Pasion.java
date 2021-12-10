@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,8 @@ public class Pasion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotNull(message = "No puede ser nulo")
+    @NotEmpty(message = "No puede estar vacio")
     @Column(name = "pasion",nullable = false,unique = true)
     private String pasion;
     @Column(name = "fecha_creacion")

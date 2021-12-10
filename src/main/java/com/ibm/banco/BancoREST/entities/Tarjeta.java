@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +24,8 @@ public class Tarjeta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(name = "nombre",nullable = false,unique = true)
+    @NotNull(message = "No puede ser nulo")
+    @NotEmpty(message = "No puede estar vacio")
     private String nombre;
     @Column(name = "tipo_tarjeta",nullable = false)
     private TipoTarjeta tipoTarjeta;
@@ -32,6 +36,10 @@ public class Tarjeta implements Serializable {
 
     @OneToMany(mappedBy = "tarjeta")
     private List<TarjetaPasion> tarjetaPasiones;
+
+    @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JoinColumn(name = "banco_id",foreignKey = @ForeignKey(name = "FK_BANCO_ID"))
+    private Banco banco;
 
     public Tarjeta(Integer id, String nombre, TipoTarjeta tipoTarjeta) {
         this.id = id;

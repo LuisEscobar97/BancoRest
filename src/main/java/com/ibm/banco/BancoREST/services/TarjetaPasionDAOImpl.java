@@ -1,5 +1,7 @@
 package com.ibm.banco.BancoREST.services;
 
+import com.ibm.banco.BancoREST.entities.Pasion;
+import com.ibm.banco.BancoREST.entities.Tarjeta;
 import com.ibm.banco.BancoREST.entities.TarjetaPasion;
 import com.ibm.banco.BancoREST.respositories.TarjetaPasionRespository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,4 +17,13 @@ public class TarjetaPasionDAOImpl extends GenericDAOImpl<TarjetaPasion,TarjetaPa
         super(respository);
     }
 
+    @Override
+    public TarjetaPasion asignarPasionYTarjeta(TarjetaPasion tarjetaPasion, Tarjeta tarjeta, Pasion pasion) {
+        TarjetaPasion tarjetaPasionActualizada= null;
+        tarjetaPasion.setPasion(pasion);
+        tarjetaPasion.setTarjeta(tarjeta);
+        tarjetaPasionActualizada=repository.save(tarjetaPasion);
+
+        return  tarjetaPasionActualizada;
+    }
 }
