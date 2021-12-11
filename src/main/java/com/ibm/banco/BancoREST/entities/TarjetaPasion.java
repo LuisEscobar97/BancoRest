@@ -1,5 +1,6 @@
 package com.ibm.banco.BancoREST.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,9 +40,12 @@ public class TarjetaPasion implements Serializable {
 
     @ManyToOne(optional = true,cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY)
     @JoinColumn(name = "pasion_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "tarjetaPasiones"})
     private Pasion pasion;
+
     @ManyToOne(optional = true,cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY)
     @JoinColumn(name = "tarjeta_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "tarjetaPasiones"})
     private Tarjeta tarjeta;
 
 

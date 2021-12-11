@@ -1,5 +1,6 @@
 package com.ibm.banco.BancoREST.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ibm.banco.BancoREST.enums.TipoTarjeta;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +36,12 @@ public class Tarjeta implements Serializable {
     private Date fechaModificacion;
 
     @OneToMany(mappedBy = "tarjeta")
+    @JsonIgnoreProperties({"tarjeta"})
     private List<TarjetaPasion> tarjetaPasiones;
 
     @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JoinColumn(name = "banco_id",foreignKey = @ForeignKey(name = "FK_BANCO_ID"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "tarjetas"})
     private Banco banco;
 
     public Tarjeta(Integer id, String nombre, TipoTarjeta tipoTarjeta) {

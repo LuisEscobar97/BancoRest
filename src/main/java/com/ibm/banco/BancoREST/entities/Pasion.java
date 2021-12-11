@@ -1,5 +1,6 @@
 package com.ibm.banco.BancoREST.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,9 +33,11 @@ public class Pasion implements Serializable {
     private Date fechaModificacion;
 
     @OneToMany(mappedBy = "pasion")
+    @JsonIgnoreProperties({"pasion"})
     private List<TarjetaPasion> tarjetasPasiones;
 
     @OneToMany(mappedBy = "pasion",fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"pasion"})
     private Set<Cliente> clientes;
 
     public Pasion(Integer id, String pasion) {

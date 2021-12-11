@@ -1,5 +1,6 @@
 package com.ibm.banco.BancoREST.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Banco implements Serializable {
     private Integer id;
     private String nombre;
     @OneToMany(mappedBy = "banco",fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"banco"})
     private Set<Tarjeta> tarjetas;
     @Column(name = "fecha_alta")
     private Date fechaAlta;

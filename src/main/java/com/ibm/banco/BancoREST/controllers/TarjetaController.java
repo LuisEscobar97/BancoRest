@@ -1,8 +1,12 @@
 package com.ibm.banco.BancoREST.controllers;
 
+import com.ibm.banco.BancoREST.dto.TarjetaDTO;
 import com.ibm.banco.BancoREST.entities.Banco;
+import com.ibm.banco.BancoREST.entities.Cliente;
 import com.ibm.banco.BancoREST.entities.Tarjeta;
 import com.ibm.banco.BancoREST.exceptions.BadRequestException;
+import com.ibm.banco.BancoREST.exceptions.NotFoundException;
+import com.ibm.banco.BancoREST.mapper.TarjetaMapper;
 import com.ibm.banco.BancoREST.services.TarjetaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,5 +82,19 @@ public class TarjetaController {
         respuesta.put("OK", "Tarjeta ID: " + id + " eliminado exitosamente{"+tarjetaEncontrado.get().toString()+"}");
 
         return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/recomendaciones")
+    public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "edad")Integer edad,@RequestParam(name = "salario") Integer salario, @RequestParam(name = "pasion") String pasion){
+
+
+        List<Tarjeta>listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
+        if (listaTarjetas.isEmpty())
+            throw new NotFoundException("No se encontraron recomedaciones para su perfil");
+
+        List<TarjetaDTO>tarjetaDTOS=listaTarjetas.stream()
+                .map(TarjetaMapper::mapTarjeta)
+                .collect(Collectors.toList());
+        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
     }
 }

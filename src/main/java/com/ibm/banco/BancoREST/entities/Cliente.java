@@ -1,6 +1,7 @@
 package com.ibm.banco.BancoREST.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,7 +38,7 @@ public class Cliente implements Serializable {
     private String dni;
     @NotNull(message = "No puede ser nulo")
     @Positive(message = "tiene que ser mayor a cero")
-    private BigDecimal sueldo;
+    private Integer sueldo;
     @NotNull(message = "No puede ser nulo")
     @Positive(message = "tiene que ser mayor a cero")
     private Integer edad;
@@ -48,9 +49,10 @@ public class Cliente implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JoinColumn(name = "pasion_id",foreignKey = @ForeignKey(name = "FK_PASION_ID"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "clientes"})
     private Pasion pasion;
 
-    public Cliente(Integer id, String nombre, String apellido, String dni, BigDecimal sueldo, Integer edad) {
+    public Cliente(Integer id, String nombre, String apellido, String dni, Integer sueldo, Integer edad) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

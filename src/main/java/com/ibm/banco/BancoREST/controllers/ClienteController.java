@@ -1,8 +1,13 @@
 package com.ibm.banco.BancoREST.controllers;
 
+import com.ibm.banco.BancoREST.dto.TarjetaDTO;
 import com.ibm.banco.BancoREST.entities.Cliente;
+import com.ibm.banco.BancoREST.entities.Tarjeta;
 import com.ibm.banco.BancoREST.exceptions.BadRequestException;
+import com.ibm.banco.BancoREST.exceptions.NotFoundException;
+import com.ibm.banco.BancoREST.mapper.TarjetaMapper;
 import com.ibm.banco.BancoREST.services.ClienteDAO;
+import com.ibm.banco.BancoREST.services.TarjetaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +26,9 @@ import java.util.stream.Collectors;
 public class ClienteController {
     @Autowired
     private ClienteDAO clienteDAO;
+
+    @Autowired
+    private TarjetaDAO tarjetaDAO;
 
     @GetMapping("/cliente")
     private ResponseEntity<?>obtenerCliente(@RequestParam(name = "id") Integer id){
@@ -63,7 +71,7 @@ public class ClienteController {
 
     }
     @DeleteMapping("/e")
-    public ResponseEntity<?> eliminarclientes(@RequestParam(name = "id")Integer id){
+    public ResponseEntity<?> eliminarClientes(@RequestParam(name = "id")Integer id){
 
         Optional<Cliente> alumnoencontrado =clienteDAO.buscarPorID(id);
         Map<String, Object> respuesta = new HashMap<String, Object>();
@@ -76,6 +84,29 @@ public class ClienteController {
         respuesta.put("OK", "Cliente ID: " + id + " eliminado exitosamente{"+alumnoencontrado.get().toString()+"}");
 
         return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.ACCEPTED);
+    }
+
+    /**
+     * end point creaqdo con la finaloidad de poder obtener las recomendaciones de tarjetas
+     * para un usuarios en especifico
+     * @param id del usuario al cual voy a entregarle recomedaciones acorde a su perfil
+     * @return lista de tarjetas que hagan match con la informacion proporcionada del usuario
+     */
+
+    @GetMapping("/recomendaciones")
+    public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "id")Integer id){
+        Optional<Cliente> clienteEncotrado=clienteDAO.buscarPorID(id);
+        if (!clienteEncotrado.isPresent())
+            throw new NotFoundException(String.format("El cliente con ID: %d no existe",id));
+
+        List<Tarjeta>listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(clienteEncotrado.get().getEdad(),clienteEncotrado.get().getSueldo(),clienteEncotrado.get().getPasion().getPasion());
+        if (listaTarjetas.isEmpty())
+            throw new NotFoundException("No se encontraron recomedaciones para su perfil");
+
+        List<TarjetaDTO>tarjetaDTOS=listaTarjetas.stream()
+                .map(TarjetaMapper::mapTarjeta)
+                .collect(Collectors.toList());
+        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
     }
 
 
