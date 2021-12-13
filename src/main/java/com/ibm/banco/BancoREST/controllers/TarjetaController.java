@@ -8,6 +8,9 @@ import com.ibm.banco.BancoREST.exceptions.BadRequestException;
 import com.ibm.banco.BancoREST.exceptions.NotFoundException;
 import com.ibm.banco.BancoREST.mapper.TarjetaMapper;
 import com.ibm.banco.BancoREST.services.TarjetaDAO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,6 +88,12 @@ public class TarjetaController {
     }
 
     @GetMapping("/recomendaciones")
+    @ApiOperation("Get recomedations of a difrents cards parsing, age, salary and a pasion")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "Accepted"),
+            @ApiResponse(code = 404, message = "Not found"),
+            }
+    )
     public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "edad")Integer edad,@RequestParam(name = "salario") Integer salario, @RequestParam(name = "pasion") String pasion){
 
 

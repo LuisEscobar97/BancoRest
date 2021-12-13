@@ -8,6 +8,9 @@ import com.ibm.banco.BancoREST.exceptions.NotFoundException;
 import com.ibm.banco.BancoREST.mapper.TarjetaMapper;
 import com.ibm.banco.BancoREST.services.ClienteDAO;
 import com.ibm.banco.BancoREST.services.TarjetaDAO;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +97,12 @@ public class ClienteController {
      */
 
     @GetMapping("/recomendaciones")
+    @ApiOperation("Get recomedations of a difrents cards parsing ID froma client")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "Accepted"),
+            @ApiResponse(code = 404, message = "Not found"),
+    }
+    )
     public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "id")Integer id){
         Optional<Cliente> clienteEncotrado=clienteDAO.buscarPorID(id);
         if (!clienteEncotrado.isPresent())
