@@ -8,14 +8,18 @@ import com.ibm.banco.BancoREST.exceptions.NotFoundException;
 import com.ibm.banco.BancoREST.mapper.TarjetaMapper;
 import com.ibm.banco.BancoREST.services.ClienteDAO;
 import com.ibm.banco.BancoREST.services.TarjetaDAO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clientes")
+@Api(value = "Clientes", description = "REST API para Clientes", tags = { "Clientes" })
 public class ClienteController {
     @Autowired
     private ClienteDAO clienteDAO;
@@ -33,6 +38,9 @@ public class ClienteController {
     @Autowired
     private TarjetaDAO tarjetaDAO;
 
+    Logger logger = LoggerFactory.getLogger(ClienteController.class);
+
+    @ApiIgnore
     @GetMapping("/cliente")
     private ResponseEntity<?>obtenerCliente(@RequestParam(name = "id") Integer id){
         Optional<Cliente> cliente = clienteDAO.buscarPorID(id);
@@ -43,6 +51,7 @@ public class ClienteController {
         return new ResponseEntity<Cliente>(cliente.get(), HttpStatus.OK);
     }
 
+    @ApiIgnore
     @PostMapping
     public ResponseEntity<?>guardarCliente(@Valid @RequestBody Cliente cliente, BindingResult result){
 
@@ -62,6 +71,7 @@ public class ClienteController {
         return new ResponseEntity<Cliente>( clienteGuardado, HttpStatus.CREATED);
     }
 
+    @ApiIgnore
     @GetMapping("/all")
     public ResponseEntity<?>obtenerTodosClientes(){
 
@@ -73,6 +83,7 @@ public class ClienteController {
 
 
     }
+    @ApiIgnore
     @DeleteMapping("/e")
     public ResponseEntity<?> eliminarClientes(@RequestParam(name = "id")Integer id){
 
@@ -97,25 +108,28 @@ public class ClienteController {
      */
 
     @GetMapping("/recomendaciones")
-    @ApiOperation("Get recomedations of a difrents cards parsing ID froma client")
+    @ApiOperation("Obtener recomendaciones de trajetas para un cliente pasando como parametro el cliente ID")
     @ApiResponses({
             @ApiResponse(code = 200,message = "Accepted"),
             @ApiResponse(code = 404, message = "Not found"),
     }
     )
     public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "id")Integer id){
-        Optional<Cliente> clienteEncotrado=clienteDAO.buscarPorID(id);
-        if (!clienteEncotrado.isPresent())
-            throw new NotFoundException(String.format("El cliente con ID: %d no existe",id));
+        Optional<Cliente> clienteEncotrado=null;
+        List<Tarjeta>listaTarjetas=null;
+        List<TarjetaDTO>tarjetaDTOS=null;
+        try {
+            clienteEncotrado=clienteDAO.buscarPorID(id);
+            listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(clienteEncotrado.get().getEdad(),clienteEncotrado.get().getSueldo(),clienteEncotrado.get().getPasion().getPasion());
+            tarjetaDTOS=listaTarjetas.stream()
+                    .map(TarjetaMapper::mapTarjeta)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
+        }catch (NotFoundException e){
+            logger.info(e.getMessage());
+        }
 
-        List<Tarjeta>listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(clienteEncotrado.get().getEdad(),clienteEncotrado.get().getSueldo(),clienteEncotrado.get().getPasion().getPasion());
-        if (listaTarjetas.isEmpty())
-            throw new NotFoundException("No se encontraron recomedaciones para su perfil");
-
-        List<TarjetaDTO>tarjetaDTOS=listaTarjetas.stream()
-                .map(TarjetaMapper::mapTarjeta)
-                .collect(Collectors.toList());
-        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
+        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.NOT_FOUND);
     }
 
 

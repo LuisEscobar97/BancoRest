@@ -2,6 +2,7 @@ package com.ibm.banco.BancoREST;
 
 import com.ibm.banco.BancoREST.entities.Cliente;
 import com.ibm.banco.BancoREST.entities.Pasion;
+import com.ibm.banco.BancoREST.entities.TarjetaPasion;
 import com.ibm.banco.BancoREST.services.ClienteDAO;
 import com.ibm.banco.BancoREST.services.PasionDAO;
 import com.ibm.banco.BancoREST.services.TarjetaDAO;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -93,15 +95,15 @@ public class Comandos implements CommandLineRunner {
        /* List<Tarjeta> tarejtas = (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(30,10000,"Nadar");
        tarejtas.forEach(System.out::println);
 
-       List<TarjetaPasion>pasiones= (List<TarjetaPasion>) tarjetaPasionDAO.buscarTodos();
 
-        pasiones.forEach(System.out::println);*/
 
        /*Cliente cliente =clienteDAO.buscarPorID(2).get();
        Pasion pasion=pasionDAO.buscarPorID(2).get();
        cliente.setPasion(pasion);
        clienteDAO.guardar(cliente);*/
+        List<TarjetaPasion> pasiones= (List<TarjetaPasion>) tarjetaPasionDAO.buscarTodos();
 
+        pasiones.forEach(System.out::println);
 
     }
 }

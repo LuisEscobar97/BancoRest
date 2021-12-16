@@ -19,7 +19,7 @@ public interface TarjetaRepository extends CrudRepository<Tarjeta,Integer> {
             "and tp.limite_salario_minimo<=:parametroSalario"
             ,nativeQuery = true)*/
    @Query("Select t from Tarjeta t join fetch t.tarjetaPasiones td join fetch td.pasion p " +
-            "where p.pasion =:parametroPasion and td.limiteEdadMaximo >= :parametroEdad " +
+            "where lower(p.pasion) =lower(:parametroPasion) and td.limiteEdadMaximo >= :parametroEdad " +
             "and td.limiteEdadMinimo <= :parametroEdad " +
             "and td.limiteSalarioMaximo >= :parametroSalario " +
             "and td.limiteSalarioMinimo <= :parametroSalario")

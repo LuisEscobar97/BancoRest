@@ -1,6 +1,7 @@
 package com.ibm.banco.BancoREST.services;
 
 import com.ibm.banco.BancoREST.entities.Tarjeta;
+import com.ibm.banco.BancoREST.exceptions.NotFoundException;
 import com.ibm.banco.BancoREST.respositories.TarjetaRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,11 @@ public class TarjetaDAOImpl extends GenericDAOImpl<Tarjeta, TarjetaRepository> i
 
     @Override
     public Iterable<Tarjeta> findTarjetasPorPasionEdadAndSalario(Integer edad, Integer salario, String pasion) {
-        return repository.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
+        List<Tarjeta> tarjetas= (List<Tarjeta>) repository.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
+        if (tarjetas.isEmpty())
+            throw new NotFoundException("No se encontraron recomedaciones para su perfil");
+
+        return tarjetas;
     }
 
     @Override

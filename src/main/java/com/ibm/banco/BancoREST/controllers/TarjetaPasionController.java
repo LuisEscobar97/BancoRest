@@ -5,11 +5,13 @@ import com.ibm.banco.BancoREST.entities.TarjetaPasion;
 import com.ibm.banco.BancoREST.exceptions.BadRequestException;
 import com.ibm.banco.BancoREST.services.TarjetaPasionDAO;
 import com.ibm.banco.BancoREST.services.TarjetaPasionDAOImpl;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tarjetas-pasiones")
+@ApiIgnore
 public class TarjetaPasionController {
 
     @Autowired
