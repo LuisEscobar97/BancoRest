@@ -40,6 +40,12 @@ public class ClienteController {
 
     Logger logger = LoggerFactory.getLogger(ClienteController.class);
 
+
+    /**
+     * end created to get an especific client from the data base
+     * @param id of a client is wanted to search
+     * @return a card if exist
+     */
     @ApiIgnore
     @GetMapping("/cliente")
     private ResponseEntity<?>obtenerCliente(@RequestParam(name = "id") Integer id){
@@ -51,6 +57,12 @@ public class ClienteController {
         return new ResponseEntity<Cliente>(cliente.get(), HttpStatus.OK);
     }
 
+    /**
+     * end point created for upload to the data base a new client
+     * @param cliente json object with all data to can create a card
+     * @param result message of exception handler when there is an error whit JSON Object data
+     * @return new Card
+     */
     @ApiIgnore
     @PostMapping
     public ResponseEntity<?>guardarCliente(@Valid @RequestBody Cliente cliente, BindingResult result){
@@ -70,7 +82,10 @@ public class ClienteController {
 
         return new ResponseEntity<Cliente>( clienteGuardado, HttpStatus.CREATED);
     }
-
+    /**
+     * end point created for list all clients from the date base
+     * @return
+     */
     @ApiIgnore
     @GetMapping("/all")
     public ResponseEntity<?>obtenerTodosClientes(){
@@ -83,30 +98,33 @@ public class ClienteController {
 
 
     }
+    /**
+     * end point created for delete a client from de data base parsing its id
+     * @param id of de client to delete
+     * @return message of success or error
+     */
     @ApiIgnore
     @DeleteMapping("/e")
     public ResponseEntity<?> eliminarClientes(@RequestParam(name = "id")Integer id){
 
-        Optional<Cliente> alumnoencontrado =clienteDAO.buscarPorID(id);
+        Optional<Cliente> cleinteEncontrado =clienteDAO.buscarPorID(id);
         Map<String, Object> respuesta = new HashMap<String, Object>();
 
-        if (!alumnoencontrado.isPresent())
+        if (!cleinteEncontrado.isPresent())
             throw new BadRequestException(String.format("El cliente con ID: %d no existe",id));
 
 
         clienteDAO.eliminarPorId(id);
-        respuesta.put("OK", "Cliente ID: " + id + " eliminado exitosamente{"+alumnoencontrado.get().toString()+"}");
+        respuesta.put("OK", "Cliente ID: " + id + " eliminado exitosamente{"+cleinteEncontrado.get().toString()+"}");
 
         return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.ACCEPTED);
     }
 
     /**
-     * end point creaqdo con la finaloidad de poder obtener las recomendaciones de tarjetas
-     * para un usuarios en especifico
-     * @param id del usuario al cual voy a entregarle recomedaciones acorde a su perfil
-     * @return lista de tarjetas que hagan match con la informacion proporcionada del usuario
+     * end point created with the porpuse to get a list of recommedated cards based on a perfil of a client
+     * @param id of a client is wanted to search
+     * @return list of card that has been made match with the parsed params
      */
-
     @GetMapping("/recomendaciones")
     @ApiOperation("Obtener recomendaciones de trajetas para un cliente pasando como parametro el cliente ID")
     @ApiResponses({
@@ -116,20 +134,19 @@ public class ClienteController {
     )
     public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "id")Integer id){
         Optional<Cliente> clienteEncotrado=null;
-        List<Tarjeta>listaTarjetas=null;
+        Map<String, Object> respuesta = new HashMap<String, Object>();
         List<TarjetaDTO>tarjetaDTOS=null;
         try {
             clienteEncotrado=clienteDAO.buscarPorID(id);
-            listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(clienteEncotrado.get().getEdad(),clienteEncotrado.get().getSueldo(),clienteEncotrado.get().getPasion().getPasion());
-            tarjetaDTOS=listaTarjetas.stream()
-                    .map(TarjetaMapper::mapTarjeta)
-                    .collect(Collectors.toList());
+            tarjetaDTOS= (List<TarjetaDTO>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(clienteEncotrado.get().getEdad(),clienteEncotrado.get().getSueldo(),clienteEncotrado.get().getPasion().getPasion());
+
             return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
         }catch (NotFoundException e){
             logger.info(e.getMessage());
+            respuesta.put("NOT FOUND", "No se encontraron recomedaciones");
         }
 
-        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.NOT_FOUND);
     }
 
 

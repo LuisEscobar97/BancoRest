@@ -37,6 +37,12 @@ public class TarjetaController {
     private TarjetaDAO tarjetaDAO;
 
     Logger logger = LoggerFactory.getLogger(TarjetaController.class);
+
+    /**
+     * end created to get an especific card from the data base
+     * @param id of a card is wanted to search
+     * @return a card if exist
+     */
     @ApiIgnore
     @GetMapping("/tarjeta")
     private ResponseEntity<?> obtenerTarjetas(@RequestParam(name = "id") Integer id){
@@ -47,6 +53,13 @@ public class TarjetaController {
 
         return new ResponseEntity<Tarjeta>(tarjeta.get(), HttpStatus.OK);
     }
+
+    /**
+     * end point created for upload to the data base a new card
+     * @param tarjeta json object with all data to can create a card
+     * @param result message of exception handler when there is an error whit JSON Object data
+     * @return new Card
+     */
     @ApiIgnore
     @PostMapping
     public ResponseEntity<?>guardarTarjetas(@Valid @RequestBody Tarjeta tarjeta, BindingResult result){
@@ -66,6 +79,11 @@ public class TarjetaController {
 
         return new ResponseEntity<Tarjeta>( tarjetaGuardada, HttpStatus.CREATED);
     }
+
+    /**
+     * end point created for list all cards from the date base
+     * @return
+     */
     @ApiIgnore
     @GetMapping("/all")
     public ResponseEntity<?>obtenerTodosTarjetas(){
@@ -78,6 +96,12 @@ public class TarjetaController {
 
 
     }
+
+    /**
+     * end ppint created for delete a card from de data base parsing its id
+     * @param id of de Card to delete
+     * @return message of success or error
+     */
     @ApiIgnore
     @DeleteMapping("/e")
     public ResponseEntity<?> eliminarTarjetas(@RequestParam(name = "id")Integer id){
@@ -95,6 +119,14 @@ public class TarjetaController {
         return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.ACCEPTED);
     }
 
+    /**
+     * end point created for to get recomendations of difrent types of cards given age,salary and a pasion
+     * @param edad of de user
+     * @param salario of de user
+     * @param pasion of de user
+     * @return list of card that has been made match with the parsed params
+     */
+
     @GetMapping("/recomendaciones")
     @ApiOperation("Obtener recomendaciones de tarajetas pasando como parametro una pasion, la edad y el salario")
     @ApiResponses({
@@ -103,19 +135,19 @@ public class TarjetaController {
             }
     )
     public ResponseEntity<?> obtenerRecomendaciones(@RequestParam(name = "edad")Integer edad,@RequestParam(name = "salario") Integer salario, @RequestParam(name = "pasion") String pasion){
-        List<Tarjeta>listaTarjetas=null;
-        List<TarjetaDTO>tarjetaDTOS=null;
-    try {
-        listaTarjetas= (List<Tarjeta>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
 
-        tarjetaDTOS=listaTarjetas.stream()
-                .map(TarjetaMapper::mapTarjeta)
-                .collect(Collectors.toList());
+        List<TarjetaDTO>tarjetaDTOS=null;
+        Map<String, Object> respuesta = new HashMap<String, Object>();
+    try {
+        tarjetaDTOS= (List<TarjetaDTO>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
+
+
         return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
     }catch (NotFoundException e){
         logger.info(e.getMessage());
+        respuesta.put("NOT FOUND", "No se encontraron recomedaciones");
     }
 
-        return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<Map<String, Object>>(respuesta,HttpStatus.NOT_FOUND);
     }
 }

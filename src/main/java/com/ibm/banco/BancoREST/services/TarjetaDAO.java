@@ -1,5 +1,6 @@
 package com.ibm.banco.BancoREST.services;
 
+import com.ibm.banco.BancoREST.dto.TarjetaDTO;
 import com.ibm.banco.BancoREST.entities.Tarjeta;
 import org.springframework.data.repository.query.Param;
 
@@ -7,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TarjetaDAO extends GenericDAO<Tarjeta>{
-    public Iterable<Tarjeta> findTarjetasPorPasionEdadAndSalario(Integer edad,Integer salario,String pasion);
-    public Iterable<Tarjeta> findTarjetasPorPasionEdadAndSalario2( Integer edad, String pasion);
+    public Iterable<TarjetaDTO> findTarjetasPorPasionEdadAndSalario(Integer edad, Integer salario, String pasion);
+
 }
