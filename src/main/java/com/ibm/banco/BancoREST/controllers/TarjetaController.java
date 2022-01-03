@@ -141,7 +141,6 @@ public class TarjetaController {
     try {
         tarjetaDTOS= (List<TarjetaDTO>) tarjetaDAO.findTarjetasPorPasionEdadAndSalario(edad,salario,pasion);
 
-
         return new ResponseEntity<List<TarjetaDTO>>(tarjetaDTOS,HttpStatus.OK);
     }catch (NotFoundException e){
         logger.info(e.getMessage());
